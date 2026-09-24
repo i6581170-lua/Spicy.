@@ -1,5 +1,29 @@
 -- mr robot Polsec max level I deobf luraph 15 leaked by xx alt
 
+-- Xeno compatibility layer
+-- Keeps the original Chilli behavior while preferring Xeno's documented APIs.
+do
+    local env = (typeof(getgenv) == "function" and getgenv()) or _G
+
+    -- Xeno exposes request/readfile/writefile/isfile through its runtime.
+    -- Mirror them into the shared environment only when the normal globals are absent.
+    if type(env.request) ~= "function" and type(request) == "function" then
+        env.request = request
+    end
+
+    if type(env.readfile) ~= "function" and type(readfile) == "function" then
+        env.readfile = readfile
+    end
+
+    if type(env.writefile) ~= "function" and type(writefile) == "function" then
+        env.writefile = writefile
+    end
+
+    if type(env.isfile) ~= "function" and type(isfile) == "function" then
+        env.isfile = isfile
+    end
+end
+
 local fn
 
 fn = function(arg)
@@ -748,35 +772,4 @@ tbl4 = {
         if arg:GetAttribute("ItemType") ~= nil then
             return false
         end
-        local v13 = string.lower(arg.Name)
-
-        for _, v14 in ipairs(tbl5) do
-            if string.find(v13, v14, 1, true) then
-                return true
-            end
-        end
-
-        return false
-    end,
-}
-
-tbl4.FindBat = function()
-    local character = localPlayer.Character
-    local tool = character and character:FindFirstChildWhichIsA("Tool")
-    if tbl4.IsBatTool(tool) then
-        return tool
-    end
-    local backpack = localPlayer:FindFirstChildOfClass("Backpack")
-
-    if backpack then
-        for _, child in ipairs(backpack:GetChildren()) do
-            if tbl4.IsBatTool(child) then
-                return child
-            end
-        end
-    end
-
-    if character then
-        for _, child in ipairs(character:GetChildren()) do
-            if tbl4.IsBatTool(child) then
-               
+     
